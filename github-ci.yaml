@@ -1,0 +1,29 @@
+name: emptyUndead
+
+run-name: ${{ github.actor }} 
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+
+jobs:
+  lint_migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: sbdchd/squawk-action@v1
+        with:
+          pattern: "docker-entrypoint-initdb.d/*.sql"
+          version: "latest"
+
+  build_docker_image:
+    needs: lint_migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        run:  chmod +x build.sh
+      - uses: actions/checkout@v4
+        run: chmod +x start.sh
